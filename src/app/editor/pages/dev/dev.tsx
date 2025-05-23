@@ -8,8 +8,15 @@ const DevPage = () => {
   
   return (
     <div className="p-4">
-      <Textarea className="w-64" onChange={(e)=>{
-        setData(JSON.stringify(parseEmbeddedJson(e.target?.value), null, 3));
+      <Textarea className="w-96" onChange={(e)=>{
+        try {
+          setData(JSON.stringify(parseEmbeddedJson(e.target?.value, false), null, 3));
+        
+        
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          console.log("Parse error");
+        }
       }}/>
 
       <pre>
@@ -23,3 +30,5 @@ const DevPage = () => {
 
 
 export default DevPage;
+
+

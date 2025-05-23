@@ -19,3 +19,10 @@ export interface NPCData {
     Contents: string
   }[]
 }
+
+export interface NPCBaseData {
+  DataType: "NPCData",
+  DataVersion: 0,
+  GameVersion: string,
+  ID: string
+}

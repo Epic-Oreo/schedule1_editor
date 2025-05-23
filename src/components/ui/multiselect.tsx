@@ -15,7 +15,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type SelectOption = Record<"value" | "label", string>;
 
-export function FancyMultiSelect({
+export function MultiSelect({
   items,
   title,
   onChange,
@@ -113,6 +113,12 @@ export function FancyMultiSelect({
             <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
               <CommandGroup className="h-full overflow-auto">
                 {selectables.map((framework) => {
+                  for (const i of selected) {
+                    if (i.value == framework.value) {
+                      return null;
+                    }
+                  }
+
                   return (
                     <CommandItem
                       key={framework.value}
@@ -123,6 +129,9 @@ export function FancyMultiSelect({
                       onSelect={() => {
                         setInputValue("");
                         setSelected((prev) => [...prev, framework]);
+                        if (selected.length + 1 >= items.length) {
+                          setOpen(false);
+                        }
                       }}
                       className={"cursor-pointer"}
                     >

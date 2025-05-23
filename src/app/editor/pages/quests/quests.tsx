@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { FancyMultiSelect } from "@/components/ui/multiselect";
+import { MultiSelect } from "@/components/ui/multiselect";
 import { useFile } from "@/context/fileContext";
 import { relativePath } from "@/lib/utils";
 
@@ -58,7 +58,7 @@ const QuestsPage = () => {
 
           <Input type="string" placeholder="Search..."/>
 
-          <FancyMultiSelect items={[
+          <MultiSelect items={[
             {label: "Quests", value: "QuestData"},
             {label: "Contracts", value: "ContractData"},
             {label: "Dead Drops", value: "DeaddropQuests"},
