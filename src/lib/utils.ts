@@ -28,6 +28,6 @@ export function parseEmbeddedJson(jsonData: string, harsh:boolean=false) {
 }
 
 
-export function capitalizeFirstLetter(val) {
+export function capitalizeFirstLetter(val: string) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }

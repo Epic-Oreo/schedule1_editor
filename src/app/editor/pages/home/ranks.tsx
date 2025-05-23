@@ -60,6 +60,7 @@ const RanksCard = () => {
     if (rankValue != null || rankValue != null) return;
 
     loadData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

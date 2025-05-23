@@ -48,6 +48,7 @@ async function loadQuestData() {
     if (NPCs.length > 0) return;
     console.log("Loading NPCs...");
     loadQuestData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(()=>{
@@ -94,7 +95,8 @@ async function loadQuestData() {
             // if (NPC.DataType != "NPCData") return null;
             const baseData = parseEmbeddedJson(NPC.BaseData) as NPCBaseData;
             const imageName = generateImageString(baseData.ID);
-
+            const info = getInfoFromID(baseData.ID);
+            if (!info) return "Error Getting Info"
 
             return (
               <div key={baseData.ID + i} className="w-full h-16 bg-card pl-5 pr-3 py-2 border rounded-lg flex gap-4 relative overflow-hidden">
@@ -104,7 +106,7 @@ async function loadQuestData() {
                 </div>
 
                 <div className="flex flex-col min-w-0 max-w-full">
-                  <h2 className="text-xl text-card-foreground overflow-hidden text-ellipsis h-full">{baseData.ID}</h2>
+                  <h2 className="text-xl text-card-foreground overflow-hidden text-ellipsis h-full">{info.Name}</h2>
                   {/* <p className="text-card-foreground/80 overflow-hidden text-ellipsis h-full">{baseData.ID}</p> */}
                 </div>
                 <div className="h-full flex items-center ml-auto">

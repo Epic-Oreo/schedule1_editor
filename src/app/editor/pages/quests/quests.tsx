@@ -43,11 +43,13 @@ const QuestsPage = () => {
     if (quests.length > 0) return;
     console.log("Loading quests...");
     loadQuestData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(()=>{
     console.log("Reloading quest data")
     loadQuestData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterTypes])
 
 
