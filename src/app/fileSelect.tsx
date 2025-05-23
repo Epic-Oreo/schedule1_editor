@@ -1,32 +1,61 @@
 "use client"
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { loadZipFile } from "@/lib/fileManagment/loadZipFile";
+import { useFile } from "@/context/fileContext";
 import { Upload } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from 'next/navigation'
 
+const zipTypes = [
+  "application/zip",
+  "application/x-zip-compressed"
+]
 
 const FileSelect = () => {
+  const { loadZip } = useFile();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [fileName, setFilename] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter()
 
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="picture" className="text-xl">{loading?`Loading... ${fileName}`:"Save File"}</Label>
       <div className="relative">
         <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none flex flex-col items-center">
           <Upload className="size-14"/>
-          <p>Drop file or click to select</p>
+          {loading?(<p>loading {fileName}</p>):(<p>Drop zip or click to select</p>)}
         </div>
-        <Input id="picture" type="file" className="h-32 file:hidden text-transparent" disabled={loading} onChange={(e)=>{
+        <Input ref={inputRef} id="fileInput" type="file" className="h-32 file:hidden text-transparent" disabled={loading} onChange={async (e)=>{
           setLoading(true);
           const selectedFiles = e.target.files;
           if (!selectedFiles) return;
           
           setFilename(selectedFiles[0].name)
-          if (selectedFiles[0].type == "application/x-zip-compressed") {
-            loadZipFile(selectedFiles[0])
+          console.log("Loading file of ",selectedFiles[0].type)
+
+          
+
+          if (zipTypes.includes(selectedFiles[0].type)) {
+
+            toast.promise(loadZip(selectedFiles[0]), {
+              loading: 'Loading...',
+              success: () => {
+                router.push("/editor")
+                return `Loaded!`;
+              },
+              error: (e: Error) => {
+
+                return {
+                  message: `Error`,
+                  description: e.message,
+                  duration: 6000
+                };
+              },
+            });
+          } else {
+            toast("Please Upload an exported ZIP file")
           }
           // if (selectedFiles[0].)
 
