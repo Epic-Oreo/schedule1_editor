@@ -1,17 +1,18 @@
+import { Item } from "@/lib/types"
 
 
 
 
 export interface NPCCollectionData {
   DataType: "NPCCollectionData",
-  DataVersion: 0,
+  DataVersion: number,
   GameVersion: string,
   NPCs: []
 }
 
 export interface NPCData {
   DataType: "NPCData",
-  DataVersion: 0,
+  DataVersion: number,
   GameVersion: string,
   BaseData: string,
   AdditionalDatas: {
@@ -22,7 +23,21 @@ export interface NPCData {
 
 export interface NPCBaseData {
   DataType: "NPCData",
-  DataVersion: 0,
+  DataVersion: number,
   GameVersion: string,
   ID: string
+}
+
+export interface NPCRelationshipData {
+  DataType: "RelationshipData",
+  DataVersion: number,
+  GameVersion: string,
+  RelationDelta: number,
+  Unlocked: boolean,
+  UnlockType: 0 | 1
+}
+
+export interface NPCInventoryData {
+  Items: Item[],
+  SlotFilters: undefined // Will not be using this
 }

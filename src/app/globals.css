@@ -132,3 +132,7 @@
 .toaster {
   white-space: pre-line;
 }
+
+.slider-track {
+  background: linear-gradient(to right, #ef4444, #f97316, #6b7280, #3b82f6, #22c55e) !important;
+}

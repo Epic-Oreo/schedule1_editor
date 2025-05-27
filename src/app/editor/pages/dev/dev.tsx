@@ -8,14 +8,15 @@ const DevPage = () => {
   
   return (
     <div className="p-4">
-      <Textarea className="w-96" onChange={(e)=>{
+      <Textarea className="w-full" onChange={(e)=>{
         try {
-          setData(JSON.stringify(parseEmbeddedJson(e.target?.value, false), null, 3));
-        
+          const data = parseEmbeddedJson(e.target?.value, true, true)
+          setData(JSON.stringify(data, null, 3));
+          console.log(data)
         
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          console.log("Parse error");
+          console.log(e);
         }
       }}/>
 

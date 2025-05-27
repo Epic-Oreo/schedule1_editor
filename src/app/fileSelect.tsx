@@ -21,13 +21,13 @@ const FileSelect = () => {
   const router = useRouter()
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
-      <div className="relative">
+    <div className="grid w-full max-w-lg items-center gap-1.5">
+      <div className="relative w-full">
         <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none flex flex-col items-center">
           <Upload className="size-14"/>
           {loading?(<p>loading {fileName}</p>):(<p>Drop zip or click to select</p>)}
         </div>
-        <Input ref={inputRef} id="fileInput" type="file" className="h-32 file:hidden text-transparent" disabled={loading} onChange={async (e)=>{
+        <Input ref={inputRef} id="fileInput" type="file" className="h-56 w-full file:hidden text-transparent" disabled={loading} onChange={async (e)=>{
           setLoading(true);
           const selectedFiles = e.target.files;
           if (!selectedFiles) return;

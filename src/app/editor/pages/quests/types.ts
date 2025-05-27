@@ -3,7 +3,7 @@ import { GameTimeData } from "@/lib/types"
 
 export interface QuestEntryData {
   DataType: "QuestEntryData",
-  DataVersion: 0,
+  DataVersion: number,
   GameVersion: string,
   Name: string,
   State: number
