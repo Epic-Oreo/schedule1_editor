@@ -11,6 +11,9 @@ import { relativePath, stupidRelativePath } from "@/lib/utils";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function saveChanges (file: JSZip, changes: Change[]) {
   for (const change of changes) {
+    if (change.type == "display") continue;
+
+
     const fileData = JSON.parse(await file.file(relativePath(change.file))[0].async("string"));
     const realPath: (string|number)[] = [];
 
@@ -18,14 +21,16 @@ async function saveChanges (file: JSZip, changes: Change[]) {
       if (typeof pathItem == "string" || typeof pathItem == "number") {
         realPath.push(pathItem);
       } else {
-        realPath.push(pathItem())
+        realPath.push(pathItem()); //? this is kinda useless rn
       }
     }
+
+    
 
     file.file(stupidRelativePath(change.file, file), JSON.stringify(fileData));
   }
 
-  return;
+  // return;
 
 
   const blob = await file.generateAsync({type: "blob"});

@@ -9,18 +9,20 @@ type FileContextType = {
   loadZip: (file: File) => Promise<void>;
   changes: Change[];
   setChanges: (newChanges: Change[]) => void;
-  addChange: (file: string, path: Path, value: unknown, name: string) => Promise<void>;
+  addChange: (file: string, path: Path, value: unknown, name: string, type: ChangeType) => Promise<void>;
   getChange: (file: string, path: Path) => unknown | null;
   deleteChange: (file: string, path: Path) => void;
 };
 
 const FileContext = createContext<FileContextType | undefined>(undefined);
 
+type ChangeType = "normal" | "display";
 export interface Change {
   file: string;
   path: Path;
   value: unknown;
   name: string | null;
+  type: ChangeType
 }
 
 type Path = (string | number | (() => (string | number)))[];
@@ -35,7 +37,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   
-  async function addChange(file: string, path: Path, value: unknown, name:string|null = null): Promise<void> {
+  async function addChange(file: string, path: Path, value: unknown, name:string|null = null, type: ChangeType = "normal"): Promise<void> {
 
     // Check if item item already exists in change list
     const existingIndex = changes.findIndex(
@@ -51,7 +53,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setChanges(updatedChanges)
     } else {
       // Add a new change
-      setChanges([...changes, { file, path, value, name }]);
+      setChanges([...changes, { file, path, value, name, type }]);
     }
     return;
   }

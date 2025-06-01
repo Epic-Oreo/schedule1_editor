@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import {
   NPCBaseData,
+  NPCCollectionData,
   NPCData,
   NPCInventoryData,
   NPCRelationshipData,
@@ -37,6 +38,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFile } from "@/context/fileContext";
+import { relativePath, stupidRelativePath } from "@/lib/utils";
 
 export interface OriginalData {
   Relationship: NPCRelationshipData | null;
@@ -69,7 +71,7 @@ const EditNPCButton = ({
   const [originalData, setOriginalData] = useState<OriginalData | null>(null);
   const [originalObject, setOriginalObject] = useState<NPCData | null>(null);
   
-  const {addChange} = useFile();
+  const {addChange, file} = useFile();
 
 
 
@@ -101,29 +103,39 @@ const EditNPCButton = ({
     setLoaded(true);
   }
 
-  function save() {
+  async function save() {
     console.log("Saving...");
     if (!originalObject || !originalData) throw Error("Original Object/Data not initialized");
+    if (!NPC.position) throw Error("NPC position not defined");
+    if (!file) throw Error("File not initialized")
+
     const newNPCObject: NPCData = {...originalObject};
     const newData: OriginalData = {
       Relationship: relationshipData,
       Inventory: inventoryData,
     };
 
+    // read all the npc data again
+    const allFileData = JSON.parse(await (file?.file(relativePath("NPCs.json"))[0].async("string")) || "") as NPCCollectionData;
 
-    // go through additional data and update the needed contents
-    let i = 0;
-    for (const data of newNPCObject.AdditionalDatas) {
-      if (Object.keys(newData).includes(data.Name)) {
-        newNPCObject.AdditionalDatas[i].Contents = JSON.stringify(newData[data.Name as keyof OriginalData]);
+    // Go through the additionalDatas on the current object and add in the new stuff. 
+    newNPCObject.AdditionalDatas = originalObject.AdditionalDatas.map((v)=>{
+      if (Object.keys(newData).includes(v.Name)) {
+        return {Name: v.Name, Contents: JSON.stringify(newData[v.Name as keyof OriginalData])}
+      } else {
+        return v
       }
-      i++;
-    }
+    })
+
+    // set the npcData at the position saved to the new data
+    allFileData.NPCs[NPC.position] = newNPCObject;
+
+    // save to the file
+    file.file(stupidRelativePath("NPCs.json", file), JSON.stringify(allFileData, null, 4));
     
-    addChange("NPCs.json", ["NPCs", "*", ()=>{
-      console.log(baseData.ID);
-      return "d"
-    }, baseData.ID], newData, baseData.ID);
+    // add a change, just for show because it has already been written.
+    addChange("NPCs.json", ["NPCs", baseData.ID], null, baseData.ID, "display");
+    
     setOpen(false);
   }
 

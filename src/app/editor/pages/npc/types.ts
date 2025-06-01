@@ -7,7 +7,7 @@ export interface NPCCollectionData {
   DataType: "NPCCollectionData",
   DataVersion: number,
   GameVersion: string,
-  NPCs: []
+  NPCs: NPCData[]
 }
 
 export interface NPCData {
@@ -18,7 +18,8 @@ export interface NPCData {
   AdditionalDatas: {
     Name: string,
     Contents: string
-  }[]
+  }[],
+  position?: number // this might be added by a function to track the list position this npc sits at.
 }
 
 export interface NPCBaseData {
