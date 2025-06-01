@@ -8,7 +8,7 @@ import { relativePath, stupidRelativePath } from "@/lib/utils";
 
 
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 async function saveChanges (file: JSZip, changes: Change[]) {
   for (const change of changes) {
     if (change.type == "display") continue;
