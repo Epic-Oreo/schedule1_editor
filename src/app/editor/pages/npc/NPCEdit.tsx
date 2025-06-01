@@ -68,7 +68,8 @@ const EditNPCButton = ({
   const [changed, setChanged] = useState<boolean>(false);
   const [originalData, setOriginalData] = useState<OriginalData | null>(null);
   const [originalObject, setOriginalObject] = useState<NPCData | null>(null);
-  const {addChange, changes, deleteChange} = useFile();
+  
+  const {addChange} = useFile();
 
 
 
