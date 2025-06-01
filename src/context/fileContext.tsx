@@ -9,18 +9,21 @@ type FileContextType = {
   loadZip: (file: File) => Promise<void>;
   changes: Change[];
   setChanges: (newChanges: Change[]) => void;
-  addChange: (file: string, path: (string | number)[], value: unknown) => Promise<void>;
-  getChange: (file: string, path: (string | number)[]) => unknown | null;
-  deleteChange: (file: string, path: (string | number)[]) => void;
+  addChange: (file: string, path: Path, value: unknown, name: string) => Promise<void>;
+  getChange: (file: string, path: Path) => unknown | null;
+  deleteChange: (file: string, path: Path) => void;
 };
 
 const FileContext = createContext<FileContextType | undefined>(undefined);
 
 export interface Change {
   file: string;
-  path: (string | number)[];
+  path: Path;
   value: unknown;
+  name: string | null;
 }
+
+type Path = (string | number | (() => (string | number)))[];
 
 
 export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -31,7 +34,8 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setFile(await loadZipFile(file))
   }
 
-  async function addChange(file: string, path: (string | number)[], value: unknown): Promise<void> {
+  
+  async function addChange(file: string, path: Path, value: unknown, name:string|null = null): Promise<void> {
 
     // Check if item item already exists in change list
     const existingIndex = changes.findIndex(
@@ -47,13 +51,13 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setChanges(updatedChanges)
     } else {
       // Add a new change
-      setChanges([...changes, { file, path, value }]);
+      setChanges([...changes, { file, path, value, name }]);
     }
     return;
   }
 
   // * this function can be a little unreliable
-  function getChange(file: string, path: (string | number)[]): unknown | null {
+  function getChange(file: string, path: Path): unknown | null {
     const change = changes.find(
       (change) =>
         change.file === file &&
@@ -62,7 +66,7 @@ export const FileProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return change ? change.value : null;
   }
 
-  function deleteChange(file: string, path: (string | number)[]) {
+  function deleteChange(file: string, path: Path) {
     const change = changes.find(
       (change) =>
         change.file === file &&

@@ -36,7 +36,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useFile } from "@/context/fileContext";
 
 export interface OriginalData {
   Relationship: NPCRelationshipData | null;
@@ -56,7 +56,6 @@ const EditNPCButton = ({
 }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [confirmUnsavedOpen, setConfirmUnsavedOpen] = useState<boolean>(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [relationshipData, setRelationshipData] =
     useState<NPCRelationshipData | null>(null);
@@ -68,6 +67,10 @@ const EditNPCButton = ({
   const formRef = useRef<HTMLFormElement | null>(null);
   const [changed, setChanged] = useState<boolean>(false);
   const [originalData, setOriginalData] = useState<OriginalData | null>(null);
+  const [originalObject, setOriginalObject] = useState<NPCData | null>(null);
+  const {addChange, changes, deleteChange} = useFile();
+
+
 
   async function loadData() {
     // if (loaded) return;
@@ -91,19 +94,43 @@ const EditNPCButton = ({
       console.log(iData);
     }
 
+    setOriginalObject({...NPC}) // Making sure its a copy
     setOriginalData({ Relationship: rData, Inventory: iData });
 
     setLoaded(true);
   }
 
-  function save() {}
+  function save() {
+    console.log("Saving...");
+    if (!originalObject || !originalData) throw Error("Original Object/Data not initialized");
+    const newNPCObject: NPCData = {...originalObject};
+    const newData: OriginalData = {
+      Relationship: relationshipData,
+      Inventory: inventoryData,
+    };
+
+
+    // go through additional data and update the needed contents
+    let i = 0;
+    for (const data of newNPCObject.AdditionalDatas) {
+      if (Object.keys(newData).includes(data.Name)) {
+        newNPCObject.AdditionalDatas[i].Contents = JSON.stringify(newData[data.Name as keyof OriginalData]);
+      }
+      i++;
+    }
+    
+    addChange("NPCs.json", ["NPCs", "*", ()=>{
+      console.log(baseData.ID);
+      return "d"
+    }, baseData.ID], newData, baseData.ID);
+    setOpen(false);
+  }
 
   function checkForChanges() {
     if (JSON.stringify(originalData) == JSON.stringify({
       Relationship: relationshipData,
       Inventory: inventoryData,
     })) {
-      console.log("Same")
       setChanged(false);
     } else {
       setChanged(true)
@@ -117,15 +144,7 @@ const EditNPCButton = ({
 
   return (
     <Dialog open={open} onOpenChange={(o)=>{
-      if (o) {
-        setOpen(true);
-      } else {
-        if (changed) {
-          setConfirmUnsavedOpen(true);
-        } else {
-          setOpen(false);
-        }
-      }
+      setOpen(o);
     }}>
       <DialogTrigger asChild>
         <Button
@@ -139,28 +158,6 @@ const EditNPCButton = ({
         </Button>
       </DialogTrigger>
       <DialogContent>
-        {/* unsaved changes alert */}
-        <AlertDialog open={confirmUnsavedOpen} onOpenChange={()=>setConfirmUnsavedOpen(false)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                You have unsaved changes that you will loose if you continue?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={()=>{
-                setConfirmUnsavedOpen(false);
-              }}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={()=>{
-                setConfirmUnsavedOpen(false);
-                setOpen(false);
-              }}>Discard</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-
         <DialogHeader>
           <DialogTitle className="flex gap-2 items-center">
             <Image
@@ -321,6 +318,7 @@ const EditNPCButton = ({
                               <DialogContent>
                                 <DialogHeader>
                                   <DialogTitle>Item Slot #{i + 1}</DialogTitle>
+                                  <DialogDescription></DialogDescription>
                                 </DialogHeader>
                                 <div className="">TDA</div>
                               </DialogContent>

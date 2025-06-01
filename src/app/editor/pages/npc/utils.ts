@@ -28,7 +28,7 @@ export function getInfoFromID(id: string): (NpcInfo | null) {
 const IMAGE_EXCEPTIONS: Record<string, string> = {
   "cranky_frank": "Frank",
   "tobias_wentworth": "Mayor",
-  "hank_stevenson": "steve"
+  "hank_stevenson": "steve",
 }
 
 export function generateImageString(NPCID: string) {

@@ -70,7 +70,7 @@ export const SDInputText = ({
     if (newValue == originalValue) {
       deleteChange(fileName, path)
     } else {
-      addChange(fileName, path, newValue);
+      addChange(fileName, path, newValue, title);
     }
 
     setValue(newValue);

@@ -1,9 +1,25 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { jsonrepair } from 'jsonrepair';
+import JSZip from "jszip";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+// When saving to a file, you can not use RegEx so we must do this horrible way; 
+export function stupidRelativePath(path: string, file: JSZip) {
+  const fileList = file.files;
+  let firstFolder = null;
+  for (const f of Object.keys(fileList)) {
+    if (f.includes("/")) {
+      firstFolder = f.split("/")[0];
+    }
+  }
+  if (path.startsWith("/")) {
+    path = path.slice(1);
+  }
+  return firstFolder + "/" + path
 }
 
 
