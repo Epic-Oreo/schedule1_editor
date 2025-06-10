@@ -15,7 +15,7 @@ const ItemSelect = ({
   onChange,
   asChild = false,
 }: {
-  children: ReactNode;
+  children: ReactNode | ReactNode[];
   className?: string;
   value?: Item;
   onChange?: (item: Item)=>void;

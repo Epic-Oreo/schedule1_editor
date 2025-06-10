@@ -1,4 +1,6 @@
+import { selectColor } from "@/components/ColorSelect";
 import ItemSelect from "@/components/ItemSelect";
+import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Item } from "@/lib/types";
 import { parseEmbeddedJson } from "@/lib/utils";
@@ -30,6 +32,13 @@ const DevPage = () => {
           {currentItem.ID}
         </ItemSelect>
       </div>
+
+      <div>
+        <Button onClick={async ()=>{
+          console.log(await selectColor());
+        }}>Select Color</Button>
+      </div>
+
 
 
       <div className="bg-card text-card-foreground p-2 rounded-lg">

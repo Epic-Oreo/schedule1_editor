@@ -40,7 +40,7 @@ export interface ClothingItem extends Omit<BaseItem, "DataType"> {
   Color: number;
 }
 
-export type Item = BaseItem | CashItem | DrugItem | IntegerItem;
+export type Item = BaseItem | CashItem | DrugItem | IntegerItem | ClothingItem;
 
 export interface SlotFilter {
   Type: number;
