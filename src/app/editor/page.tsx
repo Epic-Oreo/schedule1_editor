@@ -8,10 +8,12 @@ import SaveChangesBar from "./saveButton";
 import QuestsPage from "./pages/quests/quests";
 import DevPage from "./pages/dev/dev";
 import NPCsPage from "./pages/npc/NPCs";
+import PlayersPage from "./pages/players/Players";
 
 
 const pages: Record<string, ()=>JSX.Element> = {
   "home": EditorHome,
+  "players": PlayersPage,
   "quests": QuestsPage,
   "dev": DevPage,
   "npcs": NPCsPage,

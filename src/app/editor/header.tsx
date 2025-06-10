@@ -12,7 +12,7 @@ const EditorHeader = ({setPage}: {
           }}>General</Button>
 
           <Button className="h-full" variant={"ghost"} onClick={()=>{
-            setPage("home")
+            setPage("players")
           }}>Players</Button>
 
           <Button className="h-full" variant={"ghost"} onClick={()=>{

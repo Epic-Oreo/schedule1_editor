@@ -7,15 +7,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// When saving to a file, you can not use RegEx so we must do this horrible way; 
-export function stupidRelativePath(path: string, file: JSZip) {
+
+export function getFirstFolder(file: JSZip) {
+  if (!file) return null;
   const fileList = file.files;
-  let firstFolder = null;
   for (const f of Object.keys(fileList)) {
     if (f.includes("/")) {
-      firstFolder = f.split("/")[0];
+      return f.split("/")[0];
     }
   }
+  throw Error("First folder finder failed fantastically.")
+}
+
+
+// When saving to a file, you can not use RegEx so we must do this horrible way; 
+export function stupidRelativePath(path: string, file: JSZip) {
+  const firstFolder = getFirstFolder(file);
   if (path.startsWith("/")) {
     path = path.slice(1);
   }
@@ -61,3 +68,5 @@ export function parseEmbeddedJson(jsonData: string, harsh:boolean=false, debug:b
 export function capitalizeFirstLetter(val: string) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
+
